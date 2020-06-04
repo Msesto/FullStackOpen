@@ -1,2 +1,5 @@
 # FullStackOpen
-FullStack Open Exercises Repo
+
+This repo is for the fullstack open course exercises.
+
+
