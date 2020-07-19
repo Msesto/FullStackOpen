@@ -1,15 +1,16 @@
-export const setMessage = (data) => {
-  return {
-    type: 'SET_MESSAGE',
-    message: data
-  }
-}
+export const setNotification = (data, time) => {
+  return async dispatch => {
+    const actualTime = Number(time + '000')
+    dispatch({
+      type: 'SET_MESSAGE',
+      message: data
+    })
+    setTimeout(() => {
+      dispatch({
+        type: 'DEL_MESSAGE'
+      })
+    }, actualTime)
 
-export const delMessage = (confirm) => {
-  if (confirm === 'del') {
-    return {
-      type: 'DEL_MESSAGE',
-    }
   }
 }
 
