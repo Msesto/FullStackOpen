@@ -1,3 +1,4 @@
+let myTime = ''
 export const setNotification = (data, time) => {
   return async dispatch => {
     const actualTime = Number(time + '000')
@@ -5,15 +6,15 @@ export const setNotification = (data, time) => {
       type: 'SET_MESSAGE',
       message: data
     })
-    setTimeout(() => {
-      dispatch({
-        type: 'DEL_MESSAGE'
-      })
-    }, actualTime)
-
+    window.clearTimeout(myTime)
+    myTime =
+      setTimeout(() => {
+        dispatch({
+          type: 'DEL_MESSAGE'
+        })
+      }, actualTime)
   }
 }
-
 const messageReducer = (state = '', action) => {
   switch (action.type) {
     case 'SET_MESSAGE':
