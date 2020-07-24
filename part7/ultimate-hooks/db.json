@@ -7,6 +7,10 @@
     {
       "content": "paras feature ikinä <3",
       "id": 2
+    },
+    {
+      "content": "hi mom",
+      "id": 3
     }
   ],
   "persons": [
@@ -14,6 +18,11 @@
       "name": "mluukkai",
       "number": "040-5483923",
       "id": 1
+    },
+    {
+      "name": "meissa",
+      "number": "19-102-42042",
+      "id": 2
     }
   ]
 }

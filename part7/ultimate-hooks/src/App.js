@@ -1,4 +1,4 @@
-  
+
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 
@@ -20,15 +20,22 @@ const useField = (type) => {
 const useResource = (baseUrl) => {
   const [resources, setResources] = useState([])
 
-  // ...
-
-  const create = (resource) => {
-    // ...
+  const create = async newObject => {
+    const response = await axios.post(baseUrl, newObject)
+    return response.data
   }
 
   const service = {
     create
   }
+
+  useEffect(() => {
+    async function getAll() {
+      const request = await axios.get(baseUrl)
+      setResources(request.data)
+    }
+    getAll()
+  }, [baseUrl])
 
   return [
     resources, service
@@ -47,12 +54,11 @@ const App = () => {
     event.preventDefault()
     noteService.create({ content: content.value })
   }
- 
+
   const handlePersonSubmit = (event) => {
     event.preventDefault()
-    personService.create({ name: name.value, number: number.value})
+    personService.create({ name: name.value, number: number.value })
   }
-
   return (
     <div>
       <h2>notes</h2>
@@ -64,7 +70,7 @@ const App = () => {
 
       <h2>persons</h2>
       <form onSubmit={handlePersonSubmit}>
-        name <input {...name} /> <br/>
+        name <input {...name} /> <br />
         number <input {...number} />
         <button>create</button>
       </form>
