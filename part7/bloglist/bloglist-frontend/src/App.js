@@ -5,26 +5,32 @@ import loginService from './services/login'
 import NewBlogForm from './components/CreateBlog'
 import Togglable from './components/Togglable'
 
+import {
+  BrowserRouter as
+    Switch, Route, useRouteMatch
+} from "react-router-dom"
+
 import Notification from './components/Notification'
 import { setNotification } from './reducers/notificationReducer'
 import { useSelector, useDispatch } from 'react-redux'
 import { initializeBlogs } from './reducers/blogReducer'
+import { initializeUsers } from './reducers/userReducer'
+import UserTable from './components/User'
 
 const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const blogFormRef = useRef()
-
-
   const dispatch = useDispatch()
+
+  const users = useSelector(state => state.users)
   const blogs = useSelector(state => state.blogs)
 
   useEffect(() => {
     dispatch(initializeBlogs())
+    dispatch(initializeUsers())
   }, [dispatch])
-
-
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
@@ -87,12 +93,17 @@ const App = () => {
     </form>
   )
 
+  const logoutShowcase = () => (
+    <div>
+      <h1> Blogs </h1>
+      <p>{user.name} is logged in.</p>
+      <button type='button' onClick={logoutHandler}>Log out</button>
+    </div>
+  )
+
   const blogShowcase = () => (
     <div>
-      <div>
-        <p>{user.name} is logged in.</p>
-        <button type='button' onClick={logoutHandler}>Log out</button>
-      </div>
+      {logoutShowcase()}
       <Togglable buttonLabel='New blog' ref={blogFormRef}>
         <NewBlogForm blogs={blogs} blogFormRef={blogFormRef} ></NewBlogForm>
       </Togglable>
@@ -104,13 +115,30 @@ const App = () => {
     </div>
   )
 
+  const match = useRouteMatch('/users/:id')
+  const uniqueUser = match
+    ? users.find(user => user.id === match.params.id)
+    : null
+
   return (
-    <div>
-      <Notification></Notification>
-      <h1> Blogs </h1>
-      {user === null && loginForm()}
-      {user !== null && blogShowcase()}
-    </div>
+    <>
+      <div>
+        <Notification></Notification>
+      </div>
+      <Switch>
+        <Route exact path="/users/:id">
+          {user !== null && logoutShowcase()}
+          <UserTable users={uniqueUser}></UserTable>
+        </Route>
+        <Route exact path="/users">
+          <UserTable users={users}></UserTable>
+        </Route>
+        <Route exact path="/">
+          {user === null && loginForm()}
+          {user !== null && blogShowcase()}
+        </Route>
+      </Switch>
+    </>
   )
 }
 
