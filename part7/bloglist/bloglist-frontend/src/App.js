@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
-// import Notification from './components/Notification'
 import NewBlogForm from './components/CreateBlog'
 import Togglable from './components/Togglable'
 
@@ -11,9 +10,7 @@ import { setNotification } from './reducers/notificationReducer'
 import { useSelector, useDispatch } from 'react-redux'
 import { initializeBlogs } from './reducers/blogReducer'
 
-const App = (props) => {
-  // const [notification, setNotification] = useState(null)
-  // const [condition, setCondition] = useState('')
+const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
@@ -44,7 +41,6 @@ const App = (props) => {
       const user = await loginService.login({
         username, password,
       })
-
       setUser(user)
       blogService.setToken(user.token)
       setUsername('')
@@ -101,7 +97,7 @@ const App = (props) => {
         <NewBlogForm blogs={blogs} blogFormRef={blogFormRef} ></NewBlogForm>
       </Togglable>
       <div id='blogList'>
-        {blogs.map(blog =>
+        {blogs.sort((a, b) => b.likes - a.likes).map(blog =>
           <Blog user={user} key={blog.id} blog={blog} />
         )}
       </div>

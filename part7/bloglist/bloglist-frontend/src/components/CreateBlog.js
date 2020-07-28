@@ -1,11 +1,10 @@
 import React, { useState } from 'react'
-import blogService from '../services/blogs'
-// import PropTypes from 'prop-types'
 
+import { createBlog } from '../reducers/blogReducer'
 import { setNotification } from '../reducers/notificationReducer'
 import { useDispatch } from 'react-redux'
 
-const NewBlogForm = ({ setBlogs, testFunc, blogFormRef }) => {
+const NewBlogForm = ({ testFunc, blogFormRef }) => {
   const [author, setAuthor] = useState('')
   const [title, setTitle] = useState('')
   const [url, setUrl] = useState('')
@@ -16,17 +15,11 @@ const NewBlogForm = ({ setBlogs, testFunc, blogFormRef }) => {
     e.preventDefault()
     console.log('hi into handler')
     try {
-      await blogService.create({
-        title, author, url,
-      })
+      dispatch(createBlog({ title, author, url, }))
       dispatch(setNotification(`A new blog was added, '${title}' by ${author} was successfully saved.`, 5))
       setTitle('')
       setAuthor('')
       setUrl('')
-      blogService.getAll().then(blogs => {
-        blogs.sort((a, b) => b.likes - a.likes)
-        setBlogs(blogs)
-      })
       blogFormRef.current.toggleVisibility()
     } catch (exception) {
       dispatch(setNotification('The new blog failed to save', 5))
@@ -54,11 +47,5 @@ const NewBlogForm = ({ setBlogs, testFunc, blogFormRef }) => {
     </div>
   )
 }
-
-// NewBlogForm.propTypes = {
-//   blogFormRef: PropTypes.object.isRequired,
-//   setNotification: PropTypes.func.isRequired,
-//   setCondition: PropTypes.func.isRequired
-// }
 
 export default NewBlogForm

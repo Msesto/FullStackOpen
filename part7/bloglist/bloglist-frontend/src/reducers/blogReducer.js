@@ -34,6 +34,19 @@ export const deleteBlog = (id) => {
   }
 }
 
+export const createBlog = (blog) => {
+  return async dispatch => {
+    const newBlog = await blogService.create(blog)
+    console.log(newBlog)
+    dispatch(
+      {
+        type: 'ADD_BLOG',
+        data: { ...newBlog }
+      }
+    )
+  }
+}
+
 const blogReducer = (state = [], action) => {
   switch (action.type) {
     case 'ADD_LIKE': {
@@ -54,9 +67,7 @@ const blogReducer = (state = [], action) => {
     }
     case 'ADD_BLOG': {
       const newBlog = {
-        title: action.data.title,
-        author: action.data.author,
-        url: action.data.url
+        ...action.data
       }
       return state.concat(newBlog)
     }
