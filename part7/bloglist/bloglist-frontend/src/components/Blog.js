@@ -3,14 +3,16 @@ import React, { useState } from 'react'
 import { setNotification } from '../reducers/notificationReducer'
 import { useDispatch } from 'react-redux'
 import { likeBlog, deleteBlog } from '../reducers/blogReducer'
+import {
+  Link
+} from "react-router-dom"
 
-const Blog = ({ blog, user }) => {
-  const [info, setInfo] = useState(false)
-  const toggleInfo = () => {
-    setInfo(!info)
-  }
-
+const Blog = ({ blog, user, lucky = 0 }) => {
   const dispatch = useDispatch()
+
+  if (!blog) {
+    return null
+  }
 
   const handleLike = async () => {
     try {
@@ -45,19 +47,17 @@ const Blog = ({ blog, user }) => {
     <button id='deleteBtn' type='submit' onClick={handleDelete}> Delete </button>
   )
 
-  if (info) {
+  if (lucky === 11) {
     return (
       <div style={blogStyle}>
+        <h2>{blog.title}, by {blog.author}</h2>
         <p>
-          {blog.title}
-          <button onClick={toggleInfo}> Hide </button>
-          <br />
           {blog.url}
           <br />
           Likes: {blog.likes}
           <button type='push' id='like' onClick={handleLike}> Like </button>
           <br />
-          {blog.author}
+          Added by {blog.user.username}
           <br />
           {user.username === blog.user.username && deleteButton()}
         </p>
@@ -66,8 +66,7 @@ const Blog = ({ blog, user }) => {
   } else {
     return (
       <div style={blogStyle}>
-        {blog.title} {blog.author}
-        <button id='info' onClick={toggleInfo}> Info </button>
+        <Link to={`/blogs/${blog.id}`}>{blog.title} {blog.author}</Link>
       </div>
     )
   }

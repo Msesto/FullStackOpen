@@ -24,13 +24,13 @@ const App = () => {
   const blogFormRef = useRef()
   const dispatch = useDispatch()
 
-  const users = useSelector(state => state.users)
-  const blogs = useSelector(state => state.blogs)
-
   useEffect(() => {
     dispatch(initializeBlogs())
     dispatch(initializeUsers())
   }, [dispatch])
+
+  const users = useSelector(state => state.users)
+  const blogs = useSelector(state => state.blogs)
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
@@ -120,12 +120,19 @@ const App = () => {
     ? users.find(user => user.id === match.params.id)
     : null
 
+  const blogMatch = useRouteMatch('/blogs/:id')
+  console.log(69, blogs)
+  const uniqueBlog = blogMatch ? blogs.find(each => each.id === blogMatch.params.id) : null
+  console.log(1111, uniqueBlog)
   return (
     <>
       <div>
         <Notification></Notification>
       </div>
       <Switch>
+        <Route exact path='/blogs/:id'>
+          <Blog user={user} blog={uniqueBlog} lucky={11} />
+        </Route>
         <Route exact path="/users/:id">
           {user !== null && logoutShowcase()}
           <UserTable users={uniqueUser}></UserTable>
