@@ -1,11 +1,16 @@
 import React, { useState } from 'react'
 import blogService from '../services/blogs'
-import PropTypes from 'prop-types'
+// import PropTypes from 'prop-types'
 
-const NewBlogForm = ({ setBlogs, testFunc, blogFormRef, setNotification, setCondition }) => {
+import { setNotification } from '../reducers/notificationReducer'
+import { useDispatch } from 'react-redux'
+
+const NewBlogForm = ({ setBlogs, testFunc, blogFormRef }) => {
   const [author, setAuthor] = useState('')
   const [title, setTitle] = useState('')
   const [url, setUrl] = useState('')
+
+  const dispatch = useDispatch()
 
   const handleNewBlog = async (e) => {
     e.preventDefault()
@@ -14,8 +19,7 @@ const NewBlogForm = ({ setBlogs, testFunc, blogFormRef, setNotification, setCond
       await blogService.create({
         title, author, url,
       })
-      setNotification(`A new blog was added, '${title}' by ${author} was successfully saved.`)
-      setCondition('success')
+      dispatch(setNotification(`A new blog was added, '${title}' by ${author} was successfully saved.`, 5))
       setTitle('')
       setAuthor('')
       setUrl('')
@@ -25,14 +29,8 @@ const NewBlogForm = ({ setBlogs, testFunc, blogFormRef, setNotification, setCond
       })
       blogFormRef.current.toggleVisibility()
     } catch (exception) {
-      setNotification('The new blog failed to save')
-      console.log(exception)
-      setCondition('error')
+      dispatch(setNotification('The new blog failed to save', 5))
     }
-    setTimeout(() => {
-      setNotification('')
-      setCondition('')
-    }, 5000)
   }
 
   return (
@@ -57,10 +55,10 @@ const NewBlogForm = ({ setBlogs, testFunc, blogFormRef, setNotification, setCond
   )
 }
 
-NewBlogForm.propTypes = {
-  blogFormRef: PropTypes.object.isRequired,
-  setNotification: PropTypes.func.isRequired,
-  setCondition: PropTypes.func.isRequired
-}
+// NewBlogForm.propTypes = {
+//   blogFormRef: PropTypes.object.isRequired,
+//   setNotification: PropTypes.func.isRequired,
+//   setCondition: PropTypes.func.isRequired
+// }
 
 export default NewBlogForm

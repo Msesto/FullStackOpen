@@ -1,47 +1,35 @@
 import React, { useState } from 'react'
-import blogService from '../services/blogs'
 
-const Blog = ({ /*setBlogs*/ blog, setCondition, setNotification, user }) => {
+import { setNotification } from '../reducers/notificationReducer'
+import { useDispatch } from 'react-redux'
+import { likeBlog, deleteBlog } from '../reducers/blogReducer'
+
+const Blog = ({ blog, user }) => {
   const [info, setInfo] = useState(false)
   const toggleInfo = () => {
     setInfo(!info)
   }
 
+  const dispatch = useDispatch()
+
   const handleLike = async () => {
     try {
-      blog.likes += 1
-      await blogService.update({ likes: blog.likes + 1, author: blog.author, title: blog.author, url: blog.url }, blog.id)
-      setNotification('You have liked the blog')
-      setCondition('success')
+      dispatch(likeBlog({ ...blog, likes: blog.likes + 1 }, blog.id))
+      dispatch(setNotification('You have liked the blog', 5))
     } catch (exception) {
-      setNotification('Something went wrong, like not saved')
-      setCondition('error')
+      dispatch(setNotification('Something went wrong, like not saved', 5))
     }
-    setTimeout(() => {
-      setNotification('')
-      setCondition('')
-    }, 5000)
   }
 
   const handleDelete = async (e) => {
     e.preventDefault()
     if (window.confirm(`Do you want to delete ${blog.title}`)) {
       try {
-        await blogService.deletion(blog.id)
-        blogService.getAll().then(blogs => {
-          blogs.sort((a, b) => b.likes - a.likes)
-          /*setBlogs(blogs)*/
-        })
-        setNotification(`${blog.title} has been deleted.`)
-        setCondition('success')
+        dispatch(deleteBlog(blog.id))
+        dispatch(setNotification(`${blog.title} has been deleted.`, 5))
       } catch (exception) {
-        setNotification('Something went wrong.')
-        setCondition('error')
+        dispatch(setNotification('Something went wrong.', 5))
       }
-      setTimeout(() => {
-        setNotification('')
-        setCondition('')
-      }, 5000)
     }
   }
 

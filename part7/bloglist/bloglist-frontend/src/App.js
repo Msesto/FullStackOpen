@@ -2,16 +2,18 @@ import React, { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
-import Notification from './components/Notification'
+// import Notification from './components/Notification'
 import NewBlogForm from './components/CreateBlog'
 import Togglable from './components/Togglable'
 
+import Notification from './components/Notification'
+import { setNotification } from './reducers/notificationReducer'
 import { useSelector, useDispatch } from 'react-redux'
 import { initializeBlogs } from './reducers/blogReducer'
 
-const App = () => {
-  const [notification, setNotification] = useState(null)
-  const [condition, setCondition] = useState('')
+const App = (props) => {
+  // const [notification, setNotification] = useState(null)
+  // const [condition, setCondition] = useState('')
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
@@ -50,21 +52,11 @@ const App = () => {
       window.localStorage.setItem(
         'loggedBlogappUser', JSON.stringify(user)
       )
-      setNotification(`Welcome back ${user.name}.`)
-      setCondition('success')
-      setTimeout(() => {
-        setNotification('')
-        setCondition('')
-      }, 5000)
+      dispatch(setNotification(`Welcome back ${user.name}`))
     } catch (exception) {
-      setNotification('Wrong credentials')
-      setCondition('error')
+      dispatch(setNotification('Wrong credentials.', 5))
       setUsername('')
       setPassword('')
-      setTimeout(() => {
-        setNotification('')
-        setCondition('')
-      }, 5000)
     }
   }
 
@@ -72,12 +64,7 @@ const App = () => {
     blogService.setToken('')
     window.localStorage.removeItem('loggedBlogappUser')
     setUser(null)
-    setNotification(`${user.name} has logged out.`)
-    setCondition('success')
-    setTimeout(() => {
-      setNotification('')
-      setCondition('')
-    }, 5000)
+    dispatch(setNotification(`${user.name} has logged out.`, 5))
   }
 
   const loginForm = () => (
@@ -111,11 +98,11 @@ const App = () => {
         <button type='button' onClick={logoutHandler}>Log out</button>
       </div>
       <Togglable buttonLabel='New blog' ref={blogFormRef}>
-        <NewBlogForm blogs={blogs} /*setBlogs={setBlogs}*/ blogFormRef={blogFormRef} setNotification={setNotification} setCondition={setCondition}></NewBlogForm>
+        <NewBlogForm blogs={blogs} blogFormRef={blogFormRef} ></NewBlogForm>
       </Togglable>
       <div id='blogList'>
         {blogs.map(blog =>
-          <Blog /*setBlogs={setBlogs}*/ user={user} setCondition={setCondition} setNotification={setNotification} key={blog.id} blog={blog} />
+          <Blog user={user} key={blog.id} blog={blog} />
         )}
       </div>
     </div>
@@ -123,7 +110,7 @@ const App = () => {
 
   return (
     <div>
-      <Notification message={notification} className={condition}></Notification>
+      <Notification></Notification>
       <h1> Blogs </h1>
       {user === null && loginForm()}
       {user !== null && blogShowcase()}
