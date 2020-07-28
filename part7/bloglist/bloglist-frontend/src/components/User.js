@@ -20,9 +20,14 @@ const UserTable = ({ users }) => {
     )
   }
 
+  const refreshHandler = async () => {
+    await setTimeout(null, 1000)
+    window.location.reload()
+  }
+
   const eaUser = (each) => (
     <tr key={each.id}>
-      <td><Link to={`/users/${each.id}`}>{each.name}</Link></td>
+      <td><Link to={`/users/${each.id}`} onClick={refreshHandler}>{each.name}</Link></td>
       <td>{each.blogs.length}</td>
     </tr>
   )

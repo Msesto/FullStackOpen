@@ -41,6 +41,11 @@ const Blog = ({ blog, user, lucky = 0 }) => {
     marginBottom: 5
   }
 
+  const refreshHandler = async () => {
+    await setTimeout(null, 1000)
+    window.location.reload()
+  }
+
   const deleteButton = () => (
     <button id='deleteBtn' type='submit' onClick={handleDelete}> Delete </button>
   )
@@ -64,7 +69,7 @@ const Blog = ({ blog, user, lucky = 0 }) => {
   } else {
     return (
       <div style={blogStyle}>
-        <Link to={`/blogs/${blog.id}`}>{blog.title} {blog.author}</Link>
+        <Link to={`/blogs/${blog.id}`} onClick={refreshHandler}>{blog.title} {blog.author}</Link>
       </div>
     )
   }

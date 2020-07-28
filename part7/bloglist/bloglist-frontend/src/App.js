@@ -25,14 +25,6 @@ const App = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    dispatch(initializeBlogs())
-    dispatch(initializeUsers())
-  }, [dispatch])
-
-  const users = useSelector(state => state.users)
-  const blogs = useSelector(state => state.blogs)
-
-  useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
@@ -40,6 +32,14 @@ const App = () => {
       blogService.setToken(user.token)
     }
   }, [])
+
+  useEffect(() => {
+    dispatch(initializeBlogs())
+    dispatch(initializeUsers())
+  }, [dispatch])
+
+  const users = useSelector(state => state.users)
+  const blogs = useSelector(state => state.blogs)
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -119,12 +119,17 @@ const App = () => {
     padding: 5
   }
 
+  const refreshHandler = async () => {
+    await setTimeout(null, 1000)
+    window.location.reload()
+  }
+
   return (
     <div>
       <div style={{ backgroundColor: 'lightblue' }}>
-        <Link style={padding} to='/'>home</Link>
-        <Link style={padding} to='/blogs'>blogs</Link>
-        <Link style={padding} to='/users'>users</Link>
+        <Link style={padding} to='/' onClick={refreshHandler}>home</Link>
+        <Link style={padding} to='/blogs' onClick={refreshHandler}>blogs</Link>
+        <Link style={padding} to='/users' onClick={refreshHandler}>users</Link>
         {user !== null && <><p style={{ ...padding, display: 'inline-block' }}>{user.name} is logged in</p>
           <button type='button' onClick={logoutHandler}>Log out</button></>}
       </div>
