@@ -7,7 +7,7 @@ import Togglable from './components/Togglable'
 
 import {
   BrowserRouter as
-    Switch, Route, useRouteMatch
+    Switch, Route, useRouteMatch, Link
 } from "react-router-dom"
 
 import Notification from './components/Notification'
@@ -93,17 +93,8 @@ const App = () => {
     </form>
   )
 
-  const logoutShowcase = () => (
-    <div>
-      <h1> Blogs </h1>
-      <p>{user.name} is logged in.</p>
-      <button type='button' onClick={logoutHandler}>Log out</button>
-    </div>
-  )
-
   const blogShowcase = () => (
     <div>
-      {logoutShowcase()}
       <Togglable buttonLabel='New blog' ref={blogFormRef}>
         <NewBlogForm blogs={blogs} blogFormRef={blogFormRef} ></NewBlogForm>
       </Togglable>
@@ -121,11 +112,22 @@ const App = () => {
     : null
 
   const blogMatch = useRouteMatch('/blogs/:id')
-  console.log(69, blogs)
   const uniqueBlog = blogMatch ? blogs.find(each => each.id === blogMatch.params.id) : null
-  console.log(1111, uniqueBlog)
+
+
+  const padding = {
+    padding: 5
+  }
+
   return (
-    <>
+    <div>
+      <div style={{ backgroundColor: 'lightblue' }}>
+        <Link style={padding} to='/'>home</Link>
+        <Link style={padding} to='/blogs'>blogs</Link>
+        <Link style={padding} to='/users'>users</Link>
+        {user !== null && <><p style={{ ...padding, display: 'inline-block' }}>{user.name} is logged in</p>
+          <button type='button' onClick={logoutHandler}>Log out</button></>}
+      </div>
       <div>
         <Notification></Notification>
       </div>
@@ -133,19 +135,21 @@ const App = () => {
         <Route exact path='/blogs/:id'>
           <Blog user={user} blog={uniqueBlog} lucky={11} />
         </Route>
-        <Route exact path="/users/:id">
-          {user !== null && logoutShowcase()}
+        <Route exact path='/users/:id'>
           <UserTable users={uniqueUser}></UserTable>
         </Route>
-        <Route exact path="/users">
+        <Route exact path='/users'>
           <UserTable users={users}></UserTable>
         </Route>
-        <Route exact path="/">
+        <Route exact path='/blogs'>
+          {user !== null && blogShowcase()}
+        </Route>
+        <Route exact path='/'>
           {user === null && loginForm()}
           {user !== null && blogShowcase()}
         </Route>
       </Switch>
-    </>
+    </div>
   )
 }
 

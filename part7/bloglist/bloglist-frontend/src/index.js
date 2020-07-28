@@ -4,17 +4,14 @@ import App from './App'
 import './index.css'
 import { Provider } from 'react-redux'
 import store from './store'
-import {
-  BrowserRouter as
-    Router
-} from "react-router-dom"
+import { BrowserRouter as Router, Route } from 'react-router-dom'
 
-ReactDOM.render(
-
+const Root = ({ store }) => (
   <Provider store={store}>
     <Router>
-      <App />
+      <Route path="/" component={App} />
     </Router>
-  </Provider>,
-  document.getElementById('root')
+  </Provider>
 )
+ReactDOM.render(<Root store={store} />, document.getElementById('root'))
+

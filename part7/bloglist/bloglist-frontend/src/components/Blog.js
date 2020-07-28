@@ -1,11 +1,9 @@
-import React, { useState } from 'react'
+import React from 'react'
 
 import { setNotification } from '../reducers/notificationReducer'
 import { useDispatch } from 'react-redux'
 import { likeBlog, deleteBlog } from '../reducers/blogReducer'
-import {
-  Link
-} from "react-router-dom"
+import { Link } from "react-router-dom"
 
 const Blog = ({ blog, user, lucky = 0 }) => {
   const dispatch = useDispatch()
