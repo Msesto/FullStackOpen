@@ -6,16 +6,26 @@ import Notification from './components/Notification'
 import NewBlogForm from './components/CreateBlog'
 import Togglable from './components/Togglable'
 
-
+import { useSelector, useDispatch } from 'react-redux'
+import { initializeBlogs } from './reducers/blogReducer'
 
 const App = () => {
   const [notification, setNotification] = useState(null)
   const [condition, setCondition] = useState('')
-  const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const blogFormRef = useRef()
+
+
+  const dispatch = useDispatch()
+  const blogs = useSelector(state => state.blogs)
+
+  useEffect(() => {
+    dispatch(initializeBlogs())
+  }, [dispatch])
+
+
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
@@ -24,13 +34,6 @@ const App = () => {
       setUser(user)
       blogService.setToken(user.token)
     }
-  }, [])
-
-  useEffect(() => {
-    blogService.getAll().then(blogs => {
-      blogs.sort((a, b) => b.likes - a.likes)
-      setBlogs(blogs)
-    })
   }, [])
 
   const handleLogin = async (event) => {
@@ -108,11 +111,11 @@ const App = () => {
         <button type='button' onClick={logoutHandler}>Log out</button>
       </div>
       <Togglable buttonLabel='New blog' ref={blogFormRef}>
-        <NewBlogForm blogs={blogs} setBlogs={setBlogs} blogFormRef={blogFormRef} setNotification={setNotification} setCondition={setCondition}></NewBlogForm>
+        <NewBlogForm blogs={blogs} /*setBlogs={setBlogs}*/ blogFormRef={blogFormRef} setNotification={setNotification} setCondition={setCondition}></NewBlogForm>
       </Togglable>
       <div id='blogList'>
         {blogs.map(blog =>
-          <Blog setBlogs={setBlogs} user={user} setCondition={setCondition} setNotification={setNotification} key={blog.id} blog={blog} />
+          <Blog /*setBlogs={setBlogs}*/ user={user} setCondition={setCondition} setNotification={setNotification} key={blog.id} blog={blog} />
         )}
       </div>
     </div>

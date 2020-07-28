@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import blogService from '../services/blogs'
 
-const Blog = ({ setBlogs, blog, setCondition, setNotification, user }) => {
+const Blog = ({ /*setBlogs*/ blog, setCondition, setNotification, user }) => {
   const [info, setInfo] = useState(false)
   const toggleInfo = () => {
     setInfo(!info)
@@ -30,7 +30,7 @@ const Blog = ({ setBlogs, blog, setCondition, setNotification, user }) => {
         await blogService.deletion(blog.id)
         blogService.getAll().then(blogs => {
           blogs.sort((a, b) => b.likes - a.likes)
-          setBlogs(blogs)
+          /*setBlogs(blogs)*/
         })
         setNotification(`${blog.title} has been deleted.`)
         setCondition('success')
