@@ -8,7 +8,7 @@ import Togglable from './components/Togglable'
 import {
   BrowserRouter as
     Switch, Route, useRouteMatch, Link
-} from "react-router-dom"
+} from 'react-router-dom'
 
 import Notification from './components/Notification'
 import { setNotification } from './reducers/notificationReducer'

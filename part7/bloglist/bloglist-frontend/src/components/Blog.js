@@ -1,9 +1,11 @@
 import React from 'react'
 
 import { setNotification } from '../reducers/notificationReducer'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector, useStore } from 'react-redux'
 import { likeBlog, deleteBlog } from '../reducers/blogReducer'
-import { Link } from "react-router-dom"
+import { Link } from 'react-router-dom'
+import { addComment, initComments } from '../reducers/commentReducer'
+import Comments from './Comments'
 
 const Blog = ({ blog, user, lucky = 0 }) => {
   const dispatch = useDispatch()
@@ -11,6 +13,10 @@ const Blog = ({ blog, user, lucky = 0 }) => {
   if (!blog) {
     return null
   }
+
+  // if (lucky === 11) {
+  //   dispatch(initComments(blog.id))
+  // }
 
   const handleLike = async () => {
     try {
@@ -64,6 +70,7 @@ const Blog = ({ blog, user, lucky = 0 }) => {
           <br />
           {user.username === blog.user.username && deleteButton()}
         </p>
+        <Comments blog={blog}></Comments>
       </div>
     )
   } else {
