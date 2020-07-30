@@ -5,6 +5,7 @@ const Comment = require('../models/comment')
 const Blog = require('../models/blog')
 
 commentsRouter.get('/', async (request, response) => {
+  console.log(request.originalUrl)
   const reqUrl = request.originalUrl.substring(11, 35)
   console.log(reqUrl)
   const comments = await Comment
