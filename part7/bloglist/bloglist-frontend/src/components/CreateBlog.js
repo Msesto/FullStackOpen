@@ -4,6 +4,8 @@ import { createBlog } from '../reducers/blogReducer'
 import { setNotification } from '../reducers/notificationReducer'
 import { useDispatch } from 'react-redux'
 
+import { TextField, Button, Icon } from '@material-ui/core'
+
 const NewBlogForm = ({ testFunc, blogFormRef }) => {
   const [author, setAuthor] = useState('')
   const [title, setTitle] = useState('')
@@ -31,18 +33,23 @@ const NewBlogForm = ({ testFunc, blogFormRef }) => {
       <h2> Create new blog </h2>
       <form onSubmit={testFunc || handleNewBlog}>
         <div>
-          Title:
-          <input id='titleIn' type='text' value={title} onChange={({ target }) => setTitle(target.value)}></input>
+          <TextField placeholder='Title' id='titleIn' type='text' value={title} onChange={({ target }) => setTitle(target.value)} />
         </div>
         <div>
-          Author:
-          <input id='authorIn' type='text' value={author} onChange={({ target }) => setAuthor(target.value)}></input>
+          <TextField placeholder='Author' id='authorIn' type='text' value={author} onChange={({ target }) => setAuthor(target.value)} />
         </div>
         <div>
-          URL:
-          <input id='urlIn' type='text' value={url} onChange={({ target }) => setUrl(target.value)}></input>
+          <TextField placeholder='URL' id='urlIn' type='text' value={url} onChange={({ target }) => setUrl(target.value)} />
         </div>
-        <button id='submitBlog' type='submit'>Create</button>
+        <Button
+          variant="contained"
+          color="primary"
+          endIcon={<Icon>send</Icon>}
+          id='submitBlog'
+          type='submit'
+        >
+          Create
+        </Button>
       </form>
     </div>
   )

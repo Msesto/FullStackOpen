@@ -5,8 +5,10 @@ import { useDispatch } from 'react-redux'
 import { likeBlog, deleteBlog } from '../reducers/blogReducer'
 import { Link } from 'react-router-dom'
 import Comments from './Comments'
+import DeleteIcon from '@material-ui/icons/Delete'
+import { TableRow, TableCell, Table, TableHead, TableBody, Button } from '@material-ui/core'
 
-const Blog = ({ blog, user, lucky = 0 }) => {
+const Blog = ({ history, refresh, blog, user, lucky = 0 }) => {
   const dispatch = useDispatch()
 
   if (!blog) {
@@ -28,18 +30,12 @@ const Blog = ({ blog, user, lucky = 0 }) => {
       try {
         dispatch(deleteBlog(blog.id))
         dispatch(setNotification(`${blog.title} has been deleted.`, 5))
+        history.push('/')
+        refresh()
       } catch (exception) {
         dispatch(setNotification('Something went wrong.', 5))
       }
     }
-  }
-
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5
   }
 
   const refreshHandler = async () => {
@@ -48,31 +44,61 @@ const Blog = ({ blog, user, lucky = 0 }) => {
   }
 
   const deleteButton = () => (
-    <button id='deleteBtn' type='submit' onClick={handleDelete}> Delete </button>
+    <Button
+      variant="contained"
+      color="secondary"
+      startIcon={<DeleteIcon />}
+      id='deleteBtn'
+      type='submit'
+      onClick={handleDelete}>
+      Delete
+    </Button>
   )
 
   if (lucky === 11) {
     return (
-      <div style={blogStyle}>
-        <h2>{blog.title}, by {blog.author}</h2>
-        <p>
-          {blog.url}
-          <br />
-          Likes: {blog.likes}
-          <button type='push' id='like' onClick={handleLike}> Like </button>
-          <br />
-          Added by {blog.user.username}
-          <br />
-          {user.username === blog.user.username && deleteButton()}
-        </p>
+      <>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>
+                {blog.title}, by {blog.author}
+              </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            <TableRow>
+              <TableCell>
+                {blog.url}
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>
+                Likes: {blog.likes}
+                <Button color='primary' type='push' id='like' onClick={handleLike}> Like </Button>
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>
+                Added by {blog.user.username}
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>
+                {user.username === blog.user.username && deleteButton()}
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
         <Comments blog={blog}></Comments>
-      </div>
+      </>
     )
   } else {
     return (
-      <div style={blogStyle}>
-        <Link to={`/blogs/${blog.id}`} onClick={refreshHandler}>{blog.title} {blog.author}</Link>
-      </div>
+      <TableRow>
+        <TableCell><Link to={`/blogs/${blog.id}`} onClick={refreshHandler}>{blog.title}</Link></TableCell>
+        <TableCell align='right'><em>{blog.author}</em></TableCell>
+      </TableRow>
     )
   }
 }

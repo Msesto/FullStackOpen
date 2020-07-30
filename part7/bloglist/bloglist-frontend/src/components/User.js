@@ -1,7 +1,18 @@
 import React from 'react'
 import {
   Link
-} from "react-router-dom"
+} from 'react-router-dom'
+import {
+  Container,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableRow,
+  TableHead,
+  Card,
+} from '@material-ui/core'
+
 
 
 const UserTable = ({ users }) => {
@@ -10,13 +21,23 @@ const UserTable = ({ users }) => {
   }
   if (users && !Array.isArray(users)) {
     return (
-      <>
-        <h2>{users.name}</h2>
-        <h3>Added blogs:</h3>
-        <ul>
-          {users.blogs.map(blog => <li key={blog.id}>{blog.title}</li>)}
-        </ul>
-      </>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>
+              <h2>{users.name}</h2>
+            </TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>
+              <h3>Added blogs:</h3>
+            </TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {users.blogs.map(blog => <TableRow key={blog.id}><TableCell>{blog.title}</TableCell></TableRow>)}
+        </TableBody>
+      </Table>
     )
   }
 
@@ -26,27 +47,29 @@ const UserTable = ({ users }) => {
   }
 
   const eaUser = (each) => (
-    <tr key={each.id}>
-      <td><Link to={`/users/${each.id}`} onClick={refreshHandler}>{each.name}</Link></td>
-      <td>{each.blogs.length}</td>
-    </tr>
+    <TableRow key={each.id}>
+      <TableCell><Link to={`/users/${each.id}`} onClick={refreshHandler}>{each.name}</Link></TableCell>
+      <TableCell>{each.blogs.length}</TableCell>
+    </TableRow>
   )
 
   return (
-    <>
+    <Container>
       <h2>Users</h2>
-      <table>
-        <thead>
-          <tr>
-            <td></td>
-            <td><strong>blogs created</strong></td>
-          </tr>
-        </thead>
-        <tbody>
-          {users.map(user => eaUser(user))}
-        </tbody>
-      </table>
-    </>
+      <TableContainer component={Card}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell><strong>Users</strong></TableCell>
+              <TableCell><strong>Blogs created</strong></TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {users.map(user => eaUser(user))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Container >
   )
 }
 
