@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { useDispatch, useSelector, useStore } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { addComment, initComments } from '../reducers/commentReducer'
 
 const Comments = ({ blog }) => {
@@ -7,7 +7,7 @@ const Comments = ({ blog }) => {
 
   useEffect(() => {
     dispatch(initComments(blog.id))
-  }, [dispatch])
+  }, [dispatch, blog.id])
 
   const comments = useSelector(state => state.comments)
   const inputHandler = (e) => {
