@@ -4,19 +4,20 @@ const app = express()
 const cors = require('cors')
 const mongoose = require('mongoose')
 const config = require('./utils/config')
-const logger = require('./utils/logger')
+// const logger = require('./utils/logger')
 const blogsRouter = require('./controllers/blogs')
 const usersRouter = require('./controllers/users')
 const loginRouter = require('./controllers/login')
+const commentsRouter = require('./controllers/comments')
 
 
 const mongoUrl = config.MONGODB_URI
 mongoose.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
-        logger.info('connected to MongoDB')
+        console.log('connected to MongoDB')
     })
     .catch((error) => {
-        logger.error('error connection to MongoDB:', error.message)
+        console.log('error connection to MongoDB:', error.message)
     })
 
 app.use(cors())
@@ -34,6 +35,7 @@ const tokenExtractor = (request, response, next) => {
 
 app.use(tokenExtractor)
 app.use('/api/users', usersRouter)
+app.use('/api/blogs/:id/comments', commentsRouter)
 app.use('/api/blogs', blogsRouter)
 app.use('/api/login', loginRouter)
 if (process.env.NODE_ENV === 'test') {
@@ -61,7 +63,7 @@ const errorHandler = (error, request, response, next) => {
         })
     }
 
-    logger.error(error.message)
+    console.log(error.message)
 
     next(error)
 }
